@@ -15,14 +15,14 @@ class Satysfi < Formula
       opamroot = Pathname.pwd/"opamroot"
       opamroot.mkpath
       ENV["OPAMROOT"] = opamroot
-      ENV["OPAMYES"]="1"
+      ENV["OPAMYES"] = "1"
       system "opam", "init", "--no-setup"
       system "opam", "config", "exec", "--", "opam", "pin", "add", "-n", "satysfi", buildpath
       system "opam", "config", "exec", "--", "opam", "install", "satysfi", "--deps-only"
       system "opam", "config", "exec", "--", "make", "-C", buildpath, "PREFIX=#{prefix}"
     end
     system "make", "lib"
-    system "make", "install", "PREFIX=#{prefix}", "LIBDIR=#{pkgshare}"
+    system "make", "install", "PREFIX=#{prefix}"
   end
 
   test do
