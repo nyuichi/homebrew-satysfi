@@ -5,8 +5,6 @@ class Satysfi < Formula
 
   depends_on "ocaml" => :build
   depends_on "opam" => :build
-  depends_on "wget" => :build
-  depends_on "autoconf" => :build
 
   def install
     mktemp do
