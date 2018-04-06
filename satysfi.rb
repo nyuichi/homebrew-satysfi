@@ -13,7 +13,7 @@ class Satysfi < Formula
       ENV["OPAMROOT"] = opamroot
       ENV["OPAMYES"] = "1"
       system "opam", "init", "--no-setup"
-      system "opam", "config", "exec", "--", "opam", "pin", "add", "jbuilder", "1.0+beta17"
+      system "opam", "config", "exec", "--", "opam", "repository", "add", "satysfi-external", "https://github.com/gfngfn/satysfi-external-repo.git"
       system "opam", "config", "exec", "--", "opam", "pin", "add", "-n", "satysfi", buildpath
       system "opam", "config", "exec", "--", "opam", "install", "satysfi", "--deps-only"
       system "opam", "config", "exec", "--", "make", "-C", buildpath, "PREFIX=#{prefix}"
