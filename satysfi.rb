@@ -9,27 +9,19 @@ class Satysfi < Formula
   depends_on "opam" => :build
 
   def install
-    # mktemp to prevent opam from recursively copying a directory into itself
     mktemp do
-      opamroot = Pathname.pwd/"opamroot"
+      opamroot = Pathname.pwd/".opam"
       opamroot.mkpath
       ENV["OPAMROOT"] = opamroot
       ENV["OPAMYES"] = "1"
-      system "opam", "init", "--no-setup"
-
-      # The same trick is used by xhyve:
-      # https://github.com/Homebrew/homebrew-core/blob/71576cecdc8bf61550134e56ce837e6fc27dea4a/Formula/docker-machine-driver-xhyve.rb#L47-L48
-      inreplace "#{opamroot}/compilers/4.06.1/4.06.1/4.06.1.comp",
-        '["./configure"', '["./configure" "-no-graph"' # Avoid X11
-
-      system "opam", "switch", "4.06.1"
+      system "opam", "init", "--no-setup", "--disable-sandboxing"
       system "opam", "config", "exec", "--", "opam", "repository", "add", "satysfi-external", "https://github.com/gfngfn/satysfi-external-repo.git"
       system "opam", "config", "exec", "--", "opam", "pin", "add", "-n", "satysfi", buildpath
-      system "opam", "config", "exec", "--", "opam", "install", "satysfi", "--deps-only"
-      system "opam", "config", "exec", "--", "make", "-C", buildpath, "PREFIX=#{prefix}"
+      system "opam", "config", "exec", "--", "opam", "install", "satysfi"
+
+      bin.install "#{opamroot}/default/bin/satysfi"
+      pkgshare.install Dir["#{opamroot}/default/share/satysfi/*"]
     end
-    system "make", "lib"
-    system "make", "install", "PREFIX=#{prefix}"
   end
 
   test do
