@@ -1,12 +1,13 @@
 class Satysfi < Formula
   desc "Statically-typed, functional typesetting system"
   homepage "https://github.com/gfngfn/SATySFi"
-  url "https://github.com/gfngfn/SATySFi/archive/v0.0.2.tar.gz"
-  sha256 "91b98654a99d8d13028d4c7334efa9d8cc792949b9ad1be5ec8b4cbacfaea732"
+  #url "https://github.com/gfngfn/SATySFi/archive/v0.0.2.tar.gz"
+  #sha256 "91b98654a99d8d13028d4c7334efa9d8cc792949b9ad1be5ec8b4cbacfaea732"
   head 'https://github.com/gfngfn/SATySFi.git'
 
   depends_on "ocaml" => :build
   depends_on "opam" => :build
+  depends_on "wget" => :build
 
   def install
     mktemp do
@@ -20,8 +21,10 @@ class Satysfi < Formula
       system "opam", "config", "exec", "--", "opam", "install", "satysfi"
 
       bin.install "#{opamroot}/default/bin/satysfi"
-      pkgshare.install Dir["#{opamroot}/default/share/satysfi/*"]
     end
+
+    system "./download-fonts.sh"
+    pkgshare.install Dir["./lib-satysfi/*"]
   end
 
   test do
