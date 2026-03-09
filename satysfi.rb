@@ -1,26 +1,27 @@
 class Satysfi < Formula
   desc "Statically-typed, functional typesetting system"
   homepage "https://github.com/gfngfn/SATySFi"
-  #url "https://github.com/gfngfn/SATySFi/archive/v0.0.2.tar.gz"
-  #sha256 "91b98654a99d8d13028d4c7334efa9d8cc792949b9ad1be5ec8b4cbacfaea732"
-  head 'https://github.com/gfngfn/SATySFi.git'
+  url "https://github.com/gfngfn/SATySFi/archive/refs/tags/v0.0.11.tar.gz"
+  sha256 "801389de63a9f8b8cc4e0565fec02d9183a0882b7b538b265a211d54ac82f284"
+  license "LGPL-3.0-only"
+  env :std
 
-  depends_on "ocaml" => :build
   depends_on "opam" => :build
   depends_on "wget" => :build
 
   def install
     mktemp do
-      opamroot = Pathname.pwd/".opam"
+      opamroot = Pathname.pwd / ".opam"
       opamroot.mkpath
       ENV["OPAMROOT"] = opamroot
       ENV["OPAMYES"] = "1"
-      system "opam", "init", "--no-setup", "--disable-sandboxing"
-      system "opam", "config", "exec", "--", "opam", "repository", "add", "satysfi-external", "https://github.com/gfngfn/satysfi-external-repo.git"
-      system "opam", "config", "exec", "--", "opam", "pin", "add", "-n", "satysfi", buildpath
-      system "opam", "config", "exec", "--", "opam", "install", "satysfi"
+      system "opam", "init", "--bare", "--no-setup", "--disable-sandboxing"
+      system "opam", "switch", "create", "default", "ocaml-base-compiler.4.14.2"
+      system "opam", "repository", "add", "--switch=default", "satysfi-external", "https://github.com/gfngfn/satysfi-external-repo.git"
+      system "opam", "pin", "add", "--switch=default", "-n", "satysfi", buildpath
+      system "opam", "install", "--switch=default", "satysfi"
 
-      bin.install "#{opamroot}/default/bin/satysfi"
+      bin.install opamroot/"default/bin/satysfi"
     end
 
     system "./download-fonts.sh"
